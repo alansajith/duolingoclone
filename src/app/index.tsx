@@ -1,5 +1,6 @@
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Link } from "expo-router";
 import { images } from "@/constants/images";
 import { colors } from "@/theme";
 
@@ -17,6 +18,35 @@ export default function Index() {
           </Text>
           <Text className="text-h1 text-text-primary">Lingua Theme</Text>
         </View>
+
+        {/* Navigation to Onboarding */}
+        <Link href="/onboarding" asChild>
+          <TouchableOpacity
+            activeOpacity={0.85}
+            className="mb-6 flex-row items-center justify-between rounded-2xl bg-lingua-purple p-4 shadow-sm"
+          >
+            <View className="flex-row items-center gap-3">
+              <Image
+                source={images.mascotLogo}
+                style={styles.navMascotImage}
+                resizeMode="contain"
+              />
+              <View>
+                <Text className="font-poppins-bold text-base text-white">
+                  Onboarding Screen
+                </Text>
+                <Text className="font-poppins text-xs text-white/80">
+                  Tap to view onboarding flow
+                </Text>
+              </View>
+            </View>
+            <View className="rounded-full bg-white/20 px-3 py-1.5">
+              <Text className="font-poppins-semibold text-xs text-white">
+                Open →
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </Link>
 
         {/* ==========================================
             BRAND SECTION
@@ -418,5 +448,9 @@ const styles = StyleSheet.create({
   mascotImage: {
     width: 64,
     height: 64,
+  },
+  navMascotImage: {
+    width: 36,
+    height: 36,
   },
 });
