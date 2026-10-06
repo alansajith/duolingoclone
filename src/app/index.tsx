@@ -1,98 +1,422 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { images } from "@/constants/images";
+import { colors } from "@/theme";
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
+export default function Index() {
   return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        {/* Header section */}
+        <View className="mb-6">
+          <Text className="text-caption font-poppins-semibold tracking-wider text-lingua-purple uppercase">
+            Design System
+          </Text>
+          <Text className="text-h1 text-text-primary">Lingua Theme</Text>
+        </View>
 
-export default function HomeScreen() {
-  return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
+        {/* ==========================================
+            BRAND SECTION
+           ========================================== */}
+        <View className="mb-8 rounded-2xl border border-border bg-white p-5">
+          <Text className="mb-4 text-caption font-poppins-bold tracking-wider text-lingua-purple uppercase">
+            Brand
+          </Text>
+          <View className="flex-row items-center gap-4">
+            <Image
+              source={images.mascotLogo}
+              style={styles.mascotImage}
+              resizeMode="contain"
+            />
+            <Text className="font-poppins-bold text-4xl text-text-primary">
+              lingua
+            </Text>
+          </View>
+        </View>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
+        {/* ==========================================
+            COLORS SECTION
+           ========================================== */}
+        <View className="mb-8 rounded-2xl border border-border bg-white p-5">
+          <Text className="mb-5 text-caption font-poppins-bold tracking-wider text-lingua-purple uppercase">
+            Colors
+          </Text>
 
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
+          {/* Primary Colors */}
+          <Text className="mb-3 text-caption font-poppins-semibold tracking-wider text-text-secondary uppercase">
+            Primary
+          </Text>
+          <View className="mb-6 flex-row flex-wrap gap-3">
+            <View className="w-[47%] rounded-xl border border-border bg-surface p-3">
+              <View className="mb-2 h-16 w-full rounded-lg bg-lingua-purple" />
+              <Text className="font-poppins-semibold text-xs text-text-primary">
+                LINGUA PURPLE
+              </Text>
+              <Text className="font-poppins text-xs text-text-secondary">
+                {colors.linguaPurple}
+              </Text>
+            </View>
 
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+            <View className="w-[47%] rounded-xl border border-border bg-surface p-3">
+              <View className="mb-2 h-16 w-full rounded-lg bg-lingua-deep-purple" />
+              <Text className="font-poppins-semibold text-xs text-text-primary">
+                LINGUA DEEP PURPLE
+              </Text>
+              <Text className="font-poppins text-xs text-text-secondary">
+                {colors.linguaDeepPurple}
+              </Text>
+            </View>
+
+            <View className="w-[47%] rounded-xl border border-border bg-surface p-3">
+              <View className="mb-2 h-16 w-full rounded-lg bg-lingua-blue" />
+              <Text className="font-poppins-semibold text-xs text-text-primary">
+                LINGUA BLUE
+              </Text>
+              <Text className="font-poppins text-xs text-text-secondary">
+                {colors.linguaBlue}
+              </Text>
+            </View>
+
+            <View className="w-[47%] rounded-xl border border-border bg-surface p-3">
+              <View className="mb-2 h-16 w-full rounded-lg bg-lingua-green" />
+              <Text className="font-poppins-semibold text-xs text-text-primary">
+                LINGUA GREEN
+              </Text>
+              <Text className="font-poppins text-xs text-text-secondary">
+                {colors.linguaGreen}
+              </Text>
+            </View>
+          </View>
+
+          {/* Semantic Colors */}
+          <Text className="mb-3 text-caption font-poppins-semibold tracking-wider text-text-secondary uppercase">
+            Semantic
+          </Text>
+          <View className="mb-6 flex-row flex-wrap gap-2">
+            <View className="w-[30%] rounded-xl border border-border bg-surface p-2.5">
+              <View className="mb-2 h-12 w-full rounded-lg bg-success" />
+              <Text className="font-poppins-semibold text-[11px] text-text-primary">
+                SUCCESS
+              </Text>
+              <Text className="font-poppins text-[10px] text-text-secondary">
+                {colors.success}
+              </Text>
+            </View>
+
+            <View className="w-[30%] rounded-xl border border-border bg-surface p-2.5">
+              <View className="mb-2 h-12 w-full rounded-lg bg-warning" />
+              <Text className="font-poppins-semibold text-[11px] text-text-primary">
+                WARNING
+              </Text>
+              <Text className="font-poppins text-[10px] text-text-secondary">
+                {colors.warning}
+              </Text>
+            </View>
+
+            <View className="w-[30%] rounded-xl border border-border bg-surface p-2.5">
+              <View className="mb-2 h-12 w-full rounded-lg bg-streak" />
+              <Text className="font-poppins-semibold text-[11px] text-text-primary">
+                STREAK
+              </Text>
+              <Text className="font-poppins text-[10px] text-text-secondary">
+                {colors.streak}
+              </Text>
+            </View>
+
+            <View className="w-[30%] rounded-xl border border-border bg-surface p-2.5">
+              <View className="mb-2 h-12 w-full rounded-lg bg-error" />
+              <Text className="font-poppins-semibold text-[11px] text-text-primary">
+                ERROR
+              </Text>
+              <Text className="font-poppins text-[10px] text-text-secondary">
+                {colors.error}
+              </Text>
+            </View>
+
+            <View className="w-[30%] rounded-xl border border-border bg-surface p-2.5">
+              <View className="mb-2 h-12 w-full rounded-lg bg-info" />
+              <Text className="font-poppins-semibold text-[11px] text-text-primary">
+                INFO
+              </Text>
+              <Text className="font-poppins text-[10px] text-text-secondary">
+                {colors.info}
+              </Text>
+            </View>
+          </View>
+
+          {/* Neutrals */}
+          <Text className="mb-3 text-caption font-poppins-semibold tracking-wider text-text-secondary uppercase">
+            Neutrals
+          </Text>
+          <View className="flex-row flex-wrap gap-2">
+            <View className="w-[30%] rounded-xl border border-border bg-surface p-2.5">
+              <View className="mb-2 h-12 w-full rounded-lg bg-text-primary" />
+              <Text className="font-poppins-semibold text-[11px] text-text-primary">
+                TEXT/PRIM
+              </Text>
+              <Text className="font-poppins text-[10px] text-text-secondary">
+                {colors.textPrimary}
+              </Text>
+            </View>
+
+            <View className="w-[30%] rounded-xl border border-border bg-surface p-2.5">
+              <View className="mb-2 h-12 w-full rounded-lg bg-text-secondary" />
+              <Text className="font-poppins-semibold text-[11px] text-text-primary">
+                TEXT/SEC
+              </Text>
+              <Text className="font-poppins text-[10px] text-text-secondary">
+                {colors.textSecondary}
+              </Text>
+            </View>
+
+            <View className="w-[30%] rounded-xl border border-border bg-surface p-2.5">
+              <View className="mb-2 h-12 w-full rounded-lg bg-border" />
+              <Text className="font-poppins-semibold text-[11px] text-text-primary">
+                BORDER
+              </Text>
+              <Text className="font-poppins text-[10px] text-text-secondary">
+                {colors.border}
+              </Text>
+            </View>
+
+            <View className="w-[30%] rounded-xl border border-border bg-white p-2.5">
+              <View className="mb-2 h-12 w-full rounded-lg border border-border bg-surface" />
+              <Text className="font-poppins-semibold text-[11px] text-text-primary">
+                SURFACE
+              </Text>
+              <Text className="font-poppins text-[10px] text-text-secondary">
+                {colors.surface}
+              </Text>
+            </View>
+
+            <View className="w-[30%] rounded-xl border border-border bg-surface p-2.5">
+              <View className="mb-2 h-12 w-full rounded-lg border border-border bg-white" />
+              <Text className="font-poppins-semibold text-[11px] text-text-primary">
+                BG
+              </Text>
+              <Text className="font-poppins text-[10px] text-text-secondary">
+                {colors.background}
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        {/* ==========================================
+            TYPOGRAPHY SECTION
+           ========================================== */}
+        <View className="mb-8 rounded-2xl border border-border bg-white p-5">
+          <Text className="mb-2 text-caption font-poppins-bold tracking-wider text-lingua-purple uppercase">
+            Typography
+          </Text>
+
+          <Text className="font-poppins-semibold text-xs text-text-secondary uppercase">
+            Font Family
+          </Text>
+          <Text className="mb-1 font-poppins-bold text-4xl text-text-primary">
+            Poppins
+          </Text>
+          <Text className="mb-6 font-poppins text-sm leading-relaxed text-text-secondary">
+            Poppins is a modern, geometric sans-serif typeface that provides
+            excellent readability and a friendly personality.
+          </Text>
+
+          {/* Typography Scale Demonstration */}
+          <View className="gap-5">
+            {/* H1 */}
+            <View className="border-b border-border pb-4">
+              <View className="mb-1 flex-row items-baseline justify-between">
+                <Text className="font-poppins-bold text-base text-lingua-purple">
+                  H1
+                </Text>
+                <Text className="font-poppins text-xs text-text-secondary">
+                  32px · Bold · 1.2
+                </Text>
+              </View>
+              <Text className="text-h1 text-text-primary">
+                Page / Screen Title
+              </Text>
+            </View>
+
+            {/* H2 */}
+            <View className="border-b border-border pb-4">
+              <View className="mb-1 flex-row items-baseline justify-between">
+                <Text className="font-poppins-bold text-base text-lingua-purple">
+                  H2
+                </Text>
+                <Text className="font-poppins text-xs text-text-secondary">
+                  24px · SemiBold · 1.3
+                </Text>
+              </View>
+              <Text className="text-h2 text-text-primary">Section Title</Text>
+            </View>
+
+            {/* H3 */}
+            <View className="border-b border-border pb-4">
+              <View className="mb-1 flex-row items-baseline justify-between">
+                <Text className="font-poppins-bold text-base text-lingua-purple">
+                  H3
+                </Text>
+                <Text className="font-poppins text-xs text-text-secondary">
+                  20px · SemiBold · 1.3
+                </Text>
+              </View>
+              <Text className="text-h3 text-text-primary">
+                Card / Module Title
+              </Text>
+            </View>
+
+            {/* H4 */}
+            <View className="border-b border-border pb-4">
+              <View className="mb-1 flex-row items-baseline justify-between">
+                <Text className="font-poppins-bold text-base text-lingua-purple">
+                  H4
+                </Text>
+                <Text className="font-poppins text-xs text-text-secondary">
+                  16px · Medium · 1.4
+                </Text>
+              </View>
+              <Text className="text-h4 text-text-primary">Subheading</Text>
+            </View>
+
+            {/* Body Large */}
+            <View className="border-b border-border pb-4">
+              <View className="mb-1 flex-row items-baseline justify-between">
+                <Text className="font-poppins-bold text-base text-lingua-purple">
+                  Body Large
+                </Text>
+                <Text className="font-poppins text-xs text-text-secondary">
+                  16px · Regular · 1.6
+                </Text>
+              </View>
+              <Text className="text-body-large text-text-primary">
+                Important content
+              </Text>
+            </View>
+
+            {/* Body Medium */}
+            <View className="border-b border-border pb-4">
+              <View className="mb-1 flex-row items-baseline justify-between">
+                <Text className="font-poppins-bold text-base text-lingua-purple">
+                  Body Medium
+                </Text>
+                <Text className="font-poppins text-xs text-text-secondary">
+                  14px · Regular · 1.6
+                </Text>
+              </View>
+              <Text className="text-body-medium text-text-primary">
+                Body text
+              </Text>
+            </View>
+
+            {/* Body Small */}
+            <View className="border-b border-border pb-4">
+              <View className="mb-1 flex-row items-baseline justify-between">
+                <Text className="font-poppins-bold text-base text-lingua-purple">
+                  Body Small
+                </Text>
+                <Text className="font-poppins text-xs text-text-secondary">
+                  13px · Regular · 1.6
+                </Text>
+              </View>
+              <Text className="text-body-small text-text-primary">
+                Supporting text
+              </Text>
+            </View>
+
+            {/* Caption */}
+            <View className="pb-1">
+              <View className="mb-1 flex-row items-baseline justify-between">
+                <Text className="font-poppins-bold text-base text-lingua-purple">
+                  Caption
+                </Text>
+                <Text className="font-poppins text-xs text-text-secondary">
+                  11px · Regular · 1.4
+                </Text>
+              </View>
+              <Text className="text-caption text-text-secondary">
+                Labels, meta text
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        {/* ==========================================
+            BEM UTILITIES & UI PREVIEWS
+           ========================================== */}
+        <View className="mb-8 rounded-2xl border border-border bg-white p-5">
+          <Text className="mb-4 text-caption font-poppins-bold tracking-wider text-lingua-purple uppercase">
+            BEM Component Utilities
+          </Text>
+
+          {/* Buttons */}
+          <Text className="mb-3 text-caption font-poppins-semibold tracking-wider text-text-secondary uppercase">
+            Buttons
+          </Text>
+          <View className="mb-5 gap-3">
+            <View className="lingua-button lingua-button--primary">
+              <Text className="lingua-button__text lingua-button__text--primary">
+                Primary Button
+              </Text>
+            </View>
+            <View className="lingua-button lingua-button--deep-purple">
+              <Text className="lingua-button__text lingua-button__text--primary">
+                Deep Purple Button
+              </Text>
+            </View>
+            <View className="lingua-button lingua-button--secondary">
+              <Text className="lingua-button__text lingua-button__text--secondary">
+                Secondary Button
+              </Text>
+            </View>
+          </View>
+
+          {/* Badges */}
+          <Text className="mb-3 text-caption font-poppins-semibold tracking-wider text-text-secondary uppercase">
+            Badges
+          </Text>
+          <View className="flex-row flex-wrap gap-2">
+            <View className="lingua-badge lingua-badge--streak">
+              <Text className="font-poppins-medium text-xs text-streak">
+                Streak 5 Days
+              </Text>
+            </View>
+            <View className="lingua-badge lingua-badge--success">
+              <Text className="font-poppins-medium text-xs text-success">
+                Completed
+              </Text>
+            </View>
+            <View className="lingua-badge lingua-badge--warning">
+              <Text className="font-poppins-medium text-xs text-warning">
+                Review Needed
+              </Text>
+            </View>
+            <View className="lingua-badge lingua-badge--info">
+              <Text className="font-poppins-medium text-xs text-info">
+                New Lesson
+              </Text>
+            </View>
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
   safeArea: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
+    backgroundColor: "#F6F7FB",
   },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 40,
   },
-  title: {
-    textAlign: 'center',
-  },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+  mascotImage: {
+    width: 64,
+    height: 64,
   },
 });
