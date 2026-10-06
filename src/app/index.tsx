@@ -19,34 +19,90 @@ export default function Index() {
           <Text className="text-h1 text-text-primary">Lingua Theme</Text>
         </View>
 
-        {/* Navigation to Onboarding */}
-        <Link href="/onboarding" asChild>
-          <TouchableOpacity
-            activeOpacity={0.85}
-            className="mb-6 flex-row items-center justify-between rounded-2xl bg-lingua-purple p-4 shadow-sm"
-          >
-            <View className="flex-row items-center gap-3">
-              <Image
-                source={images.mascotLogo}
-                style={styles.navMascotImage}
-                resizeMode="contain"
-              />
-              <View>
-                <Text className="font-poppins-bold text-base text-white">
-                  Onboarding Screen
-                </Text>
-                <Text className="font-poppins text-xs text-white/80">
-                  Tap to view onboarding flow
+        {/* Navigation cards */}
+        <View className="mb-6 gap-3">
+          <Link href="/onboarding" asChild>
+            <TouchableOpacity
+              activeOpacity={0.85}
+              className="flex-row items-center justify-between rounded-2xl bg-lingua-purple p-4 shadow-sm"
+            >
+              <View className="flex-row items-center gap-3">
+                <Image
+                  source={images.mascotLogo}
+                  style={styles.navMascotImage}
+                  resizeMode="contain"
+                />
+                <View>
+                  <Text className="font-poppins-bold text-base text-white">
+                    Onboarding Screen
+                  </Text>
+                  <Text className="font-poppins text-xs text-white/80">
+                    Tap to view onboarding flow
+                  </Text>
+                </View>
+              </View>
+              <View className="rounded-full bg-white/20 px-3 py-1.5">
+                <Text className="font-poppins-semibold text-xs text-white">
+                  Open →
                 </Text>
               </View>
-            </View>
-            <View className="rounded-full bg-white/20 px-3 py-1.5">
-              <Text className="font-poppins-semibold text-xs text-white">
-                Open →
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </Link>
+            </TouchableOpacity>
+          </Link>
+
+          <View className="flex-row gap-3">
+            <Link href="/sign-up" asChild className="flex-1">
+              <TouchableOpacity
+                activeOpacity={0.85}
+                className="flex-1 flex-row items-center justify-between rounded-2xl border border-border bg-white p-3.5"
+              >
+                <View className="flex-row items-center gap-2.5">
+                  <Image
+                    source={images.mascotAuth}
+                    style={styles.navMascotSmall}
+                    resizeMode="contain"
+                  />
+                  <View>
+                    <Text className="font-poppins-semibold text-sm text-text-primary">
+                      Sign Up
+                    </Text>
+                    <Text className="font-poppins text-[11px] text-text-secondary">
+                      Create account
+                    </Text>
+                  </View>
+                </View>
+                <Text className="font-poppins-semibold text-xs text-lingua-purple">
+                  →
+                </Text>
+              </TouchableOpacity>
+            </Link>
+
+            <Link href="/sign-in" asChild className="flex-1">
+              <TouchableOpacity
+                activeOpacity={0.85}
+                className="flex-1 flex-row items-center justify-between rounded-2xl border border-border bg-white p-3.5"
+              >
+                <View className="flex-row items-center gap-2.5">
+                  <Image
+                    source={images.mascotAuth}
+                    style={styles.navMascotSmall}
+                    resizeMode="contain"
+                  />
+                  <View>
+                    <Text className="font-poppins-semibold text-sm text-text-primary">
+                      Sign In
+                    </Text>
+                    <Text className="font-poppins text-[11px] text-text-secondary">
+                      Welcome back
+                    </Text>
+                  </View>
+                </View>
+                <Text className="font-poppins-semibold text-xs text-lingua-purple">
+                  →
+                </Text>
+              </TouchableOpacity>
+            </Link>
+          </View>
+        </View>
 
         {/* ==========================================
             BRAND SECTION
@@ -452,5 +508,9 @@ const styles = StyleSheet.create({
   navMascotImage: {
     width: 36,
     height: 36,
+  },
+  navMascotSmall: {
+    width: 28,
+    height: 28,
   },
 });

@@ -13,6 +13,12 @@ import treasure from "@/assets/images/treasure.png";
 import icon from "@/assets/images/icon.png";
 import splashIcon from "@/assets/images/splash-icon.png";
 import favicon from "@/assets/images/favicon.png";
+import googleIcon from "@/assets/images/google-icon.png";
+import facebookIcon from "@/assets/images/facebook-icon.png";
+import appleIcon from "@/assets/images/apple-icon.png";
+import sparkle from "@/assets/images/sparkle.png";
+import eye from "@/assets/images/eye.png";
+import eyeOff from "@/assets/images/eye-off.png";
 
 export const images = {
   mascotLogo,
@@ -26,6 +32,12 @@ export const images = {
   icon,
   splashIcon,
   favicon,
+  googleIcon,
+  facebookIcon,
+  appleIcon,
+  sparkle,
+  eye,
+  eyeOff,
 } as const;
 
 export type ImageKey = keyof typeof images;
