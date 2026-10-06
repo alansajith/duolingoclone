@@ -46,11 +46,7 @@ export default function OnboardingScreen() {
   const router = useRouter();
 
   const handleGetStarted = () => {
-    if (router.canGoBack()) {
-      router.back();
-    } else {
-      router.push("/");
-    }
+    router.push("/sign-up");
   };
 
   return (
