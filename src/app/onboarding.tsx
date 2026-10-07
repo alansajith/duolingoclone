@@ -7,7 +7,8 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
+import { useAuth } from "@clerk/expo";
 import { images } from "@/constants/images";
 
 interface SpeechBubbleProps {
@@ -43,7 +44,16 @@ function SpeechBubble({
 }
 
 export default function OnboardingScreen() {
+  const { isSignedIn, isLoaded } = useAuth();
   const router = useRouter();
+
+  if (!isLoaded) {
+    return null;
+  }
+
+  if (isSignedIn) {
+    return <Redirect href="/" />;
+  }
 
   const handleGetStarted = () => {
     router.push("/sign-up");

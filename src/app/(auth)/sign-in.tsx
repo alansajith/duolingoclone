@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -10,13 +11,18 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+import { useSignIn, useSSO } from "@clerk/expo";
 import { images } from "@/constants/images";
 import { VerificationModal } from "@/components/VerificationModal";
 
 export default function SignInScreen() {
   const router = useRouter();
+  const { signIn } = useSignIn();
+  const { startSSOFlow } = useSSO();
+
   const [email, setEmail] = useState("");
   const [isVerificationVisible, setIsVerificationVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleBack = () => {
     if (router.canGoBack()) {
@@ -26,8 +32,114 @@ export default function SignInScreen() {
     }
   };
 
-  const handleSignIn = () => {
-    setIsVerificationVisible(true);
+  const handleSignIn = async () => {
+    if (!email.trim()) {
+      Alert.alert("Missing Email", "Please enter your email address.");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const { error } = await signIn.emailCode.sendCode({
+        emailAddress: email.trim(),
+      });
+
+      if (error) {
+        Alert.alert(
+          "Sign In Error",
+          error.longMessage ||
+            error.message ||
+            "Failed to send verification code."
+        );
+        return;
+      }
+
+      setIsVerificationVisible(true);
+    } catch (err: any) {
+      Alert.alert(
+        "Sign In Error",
+        err?.longMessage || err?.message || "An unexpected error occurred."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleVerifyCode = async (code: string) => {
+    try {
+      const { error } = await signIn.emailCode.verifyCode({ code });
+      if (error) {
+        return {
+          success: false,
+          error:
+            error.longMessage ||
+            error.message ||
+            "Invalid verification code.",
+        };
+      }
+
+      if (signIn.status === "complete") {
+        const { error: finalizeError } = await signIn.finalize();
+        if (finalizeError) {
+          return {
+            success: false,
+            error:
+              finalizeError.longMessage ||
+              finalizeError.message ||
+              "Failed to finalize session.",
+          };
+        }
+      }
+
+      return { success: true };
+    } catch (err: any) {
+      return {
+        success: false,
+        error: err?.longMessage || err?.message || "Verification failed.",
+      };
+    }
+  };
+
+  const handleResendCode = async () => {
+    try {
+      const { error } = await signIn.emailCode.sendCode({
+        emailAddress: email.trim(),
+      });
+      if (error) {
+        return {
+          success: false,
+          error:
+            error.longMessage ||
+            error.message ||
+            "Failed to resend code.",
+        };
+      }
+      return { success: true };
+    } catch (err: any) {
+      return {
+        success: false,
+        error: err?.longMessage || err?.message || "Failed to resend code.",
+      };
+    }
+  };
+
+  const handleSocialAuth = async (
+    strategy: "oauth_google" | "oauth_facebook" | "oauth_apple"
+  ) => {
+    try {
+      const { createdSessionId, setActive } = await startSSOFlow({
+        strategy,
+      });
+      if (createdSessionId && setActive) {
+        await setActive({ session: createdSessionId });
+        router.replace("/");
+      }
+    } catch (err: any) {
+      const message = err?.errors?.[0]?.message || err?.message;
+      if (message && !message.toLowerCase().includes("cancel")) {
+        Alert.alert("Sign In", message);
+      }
+    }
   };
 
   return (
@@ -119,10 +231,11 @@ export default function SignInScreen() {
         <TouchableOpacity
           activeOpacity={0.88}
           onPress={handleSignIn}
+          disabled={isLoading}
           className="mt-5 items-center justify-center rounded-2xl bg-lingua-purple py-4"
         >
           <Text className="font-poppins-semibold text-base text-white">
-            Sign In
+            {isLoading ? "Signing In..." : "Sign In"}
           </Text>
         </TouchableOpacity>
 
@@ -140,7 +253,7 @@ export default function SignInScreen() {
           {/* Google */}
           <TouchableOpacity
             activeOpacity={0.85}
-            onPress={handleSignIn}
+            onPress={() => handleSocialAuth("oauth_google")}
             className="flex-row items-center justify-center gap-3.5 rounded-2xl border border-border bg-white py-3.5"
           >
             <Image
@@ -156,7 +269,7 @@ export default function SignInScreen() {
           {/* Facebook */}
           <TouchableOpacity
             activeOpacity={0.85}
-            onPress={handleSignIn}
+            onPress={() => handleSocialAuth("oauth_facebook")}
             className="flex-row items-center justify-center gap-3.5 rounded-2xl border border-border bg-white py-3.5"
           >
             <Image
@@ -172,7 +285,7 @@ export default function SignInScreen() {
           {/* Apple */}
           <TouchableOpacity
             activeOpacity={0.85}
-            onPress={handleSignIn}
+            onPress={() => handleSocialAuth("oauth_apple")}
             className="flex-row items-center justify-center gap-3.5 rounded-2xl border border-border bg-white py-3.5"
           >
             <Image
@@ -207,6 +320,9 @@ export default function SignInScreen() {
         visible={isVerificationVisible}
         email={email}
         onClose={() => setIsVerificationVisible(false)}
+        onVerify={handleVerifyCode}
+        onResend={handleResendCode}
+        onSuccess={() => router.replace("/")}
       />
     </SafeAreaView>
   );
