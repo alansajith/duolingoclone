@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
+  Alert,
   Keyboard,
   KeyboardAvoidingView,
   Modal,
@@ -18,23 +19,31 @@ interface VerificationModalProps {
   email?: string;
   onClose: () => void;
   onSuccess?: () => void;
+  onVerify?: (code: string) => Promise<{ success: boolean; error?: string }>;
+  onResend?: () => Promise<{ success: boolean; error?: string }>;
 }
 
 interface ModalContentProps {
   email?: string;
   onClose: () => void;
   onSuccess?: () => void;
+  onVerify?: (code: string) => Promise<{ success: boolean; error?: string }>;
+  onResend?: () => Promise<{ success: boolean; error?: string }>;
 }
 
 function VerificationModalContent({
   email,
   onClose,
   onSuccess,
+  onVerify,
+  onResend,
 }: ModalContentProps) {
   const router = useRouter();
   const [code, setCode] = useState("");
   const [resendTimer, setResendTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isResending, setIsResending] = useState(false);
   const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
@@ -60,25 +69,55 @@ function VerificationModalContent({
     return () => clearInterval(interval);
   }, [resendTimer]);
 
-  const handleCodeChange = (text: string) => {
+  const handleCodeChange = async (text: string) => {
+    if (isVerifying) return;
     const cleaned = text.replace(/[^0-9]/g, "").slice(0, 6);
     setCode(cleaned);
 
     if (cleaned.length === 6) {
       Keyboard.dismiss();
-      setTimeout(() => {
-        onClose();
-        if (onSuccess) {
-          onSuccess();
+      if (onVerify) {
+        setIsVerifying(true);
+        const result = await onVerify(cleaned);
+        setIsVerifying(false);
+        if (result.success) {
+          setTimeout(() => {
+            onClose();
+            if (onSuccess) {
+              onSuccess();
+            } else {
+              router.replace("/");
+            }
+          }, 250);
         } else {
-          router.replace("/");
+          Alert.alert("Verification Error", result.error || "Invalid verification code.");
+          setCode("");
+          inputRef.current?.focus();
         }
-      }, 250);
+      } else {
+        setTimeout(() => {
+          onClose();
+          if (onSuccess) {
+            onSuccess();
+          } else {
+            router.replace("/");
+          }
+        }, 250);
+      }
     }
   };
 
-  const handleResend = () => {
-    if (!canResend) return;
+  const handleResend = async () => {
+    if (!canResend || isResending) return;
+    if (onResend) {
+      setIsResending(true);
+      const result = await onResend();
+      setIsResending(false);
+      if (!result.success) {
+        Alert.alert("Resend Error", result.error || "Failed to resend code.");
+        return;
+      }
+    }
     setCanResend(false);
     setResendTimer(30);
     setCode("");
@@ -194,6 +233,8 @@ export function VerificationModal({
   email,
   onClose,
   onSuccess,
+  onVerify,
+  onResend,
 }: VerificationModalProps) {
   return (
     <Modal
@@ -207,6 +248,8 @@ export function VerificationModal({
           email={email}
           onClose={onClose}
           onSuccess={onSuccess}
+          onVerify={onVerify}
+          onResend={onResend}
         />
       ) : null}
     </Modal>
